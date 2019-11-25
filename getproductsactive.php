@@ -6,7 +6,8 @@ if (!defined("WHMCS")) {
     die("This file cannot be access directly!");
 }
 
-function get_env($vars) {
+function get_env($vars)
+{
     $array = array('action' => array(), 'gid' => array());
 
     if (isset($vars['cmd'])) {

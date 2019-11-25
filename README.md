@@ -1,116 +1,382 @@
-Currently WHMCS API GetProducts (<a href="https://developers.whmcs.com/api-reference/getproducts/" target="_blank" rel="external nofollow noopener">https://developers.whmcs.com/api-reference/getproducts/</a>) retrieves all products and no information regarding if the product is active or not.
+# WHMCS CUSTOM API's Solutions
+
+Currently WHMCS API is very limited and doesnt provide a full experience to comunicate with it.
+
+
+
+This project consists of sharing custom API solutions:
+
+### Currently Available:
+  - GetProductsActive
+  - AddCreditApi
+  - GetProductsGroups
+  - PaymentData
+
+##### GetProductsActive
+
+Currently WHMCS API GetProducts [api-reference/getproducts](https://developers.whmcs.com/api-reference/getproducts/) retrieves all products and no information regarding if the product is active or not.
 
 So I just created my own API call to handle this and only retrieve the visible (not hidden) products.
 
 Just upload to /includes/api .
-<h3>Request Parameters "GetProductsActive"</h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-<th>Required</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>action</td>
-<td>string</td>
-<td>“GetProductsActive”</td>
-<td>Required</td>
-</tr>
-<tr>
-<td>pid</td>
-<td>int</td>
-<td>string</td>
-<td>Obtain a specific product id configuration. Can be a list of ids comma separated</td>
-</tr>
-<tr>
-<td>gid</td>
-<td>int</td>
-<td>Retrieve products in a specific group id</td>
-<td>Optional</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3>Response Parameters</h3>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>result</td>
-<td>string</td>
-<td>The result of the operation: success or error</td>
-</tr>
-<tr>
-<td>totalresults</td>
-<td>int</td>
-<td>The total number of results available</td>
-</tr>
-<tr>
-<td>startnumber</td>
-<td>int</td>
-<td>The starting number for the returned results</td>
-</tr>
-<tr>
-<td>numreturned</td>
-<td>int</td>
-<td>The number of results returned</td>
-</tr>
-<tr>
-<td>products</td>
-<td>array</td>
-<td>An array of products matching the criteria passed</td>
-</tr>
-</tbody>
-</table>
-<h3>Example Request (CURL)</h3>
-<pre class="ipsCode prettyprint lang-html prettyprinted"><span class="pln">$ch = curl_init();
+
+##### Request Parameters "GetProductsActive" 
+
+| Parameter | Type | Description | Required |
+| ------ | ------ | ------ | ------ |
+| action | string | “GetProductsActive” | Required |
+| pid | int | Obtain a specific product id configuration. Can be a list of ids comma separated | optional |
+| gid | int | Retrieve products in a specific group id | optional |
+
+##### Response Parameters
+
+| Parameter | Type | Description 
+| ------ | ------ | ------ |
+| result | string | The result of the operation: success or error |
+| totalresults | int | The total number of results available | 
+| startnumber | int | The starting number for the returned results |
+| numreturned | int | The number of results returned |
+| products | array | An array of products matching the criteria passed | 
+
+### Example Request (CURL)
+
+```php
+$command = 'GetProductsActive';
+$postData = array(
+    'pid' => '1', // or gid => '1' or both
+);
+$adminUsername = 'ADMIN_USERNAME'; // Optional for WHMCS 7.2 and later
+
+$results = localAPI($command, $postData, $adminUsername);
+print_r($results);
+```
+
+### Example Request (Local API)
+
+```php
+$ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://www.example.com/includes/api.php');
 curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS,
     http_build_query(
         array(
-            'action' =&gt; 'GetProductsActive',
+            'action' => 'GetProductsActive',
             // See https://developers.whmcs.com/api/authentication
-            'username' =&gt; 'IDENTIFIER_OR_ADMIN_USERNAME',
-            'password' =&gt; 'SECRET_OR_HASHED_PASSWORD',
-            'pid' =&gt; '1',
-            'responsetype' =&gt; 'json',
+            'username' => 'IDENTIFIER_OR_ADMIN_USERNAME',
+            'password' => 'SECRET_OR_HASHED_PASSWORD',
+            'pid' => '1',
+            'responsetype' => 'json',
         )
     )
 );
 $response = curl_exec($ch);
-curl_close($ch);</span></pre>
-&nbsp;
-<h3>Example Request (Local API)</h3>
-<pre class="ipsCode prettyprint lang-html prettyprinted"><span class="pln">$command = 'GetProductsActive';
+curl_close($ch);
+```
+
+#### Example output:
+```json
+{
+    "result": "success",
+    "totalresults": 1,
+    "products": {
+        "product": [
+            {
+                "pid": "123",
+                "gid": "",
+                "type": "",
+                "name": "XPTO",
+                "description": "",
+                "module": "cpanel",
+                "paytype": "recurring",
+                "pricing": {
+                    "EUR": {
+                        "prefix": "",
+                        "suffix": "€",
+                        "msetupfee": "0.00",
+                        "qsetupfee": "0.00",
+                        "ssetupfee": "0.00",
+                        "asetupfee": "0.00",
+                        "bsetupfee": "0.00",
+                        "tsetupfee": "0.00",
+                        "monthly": "-1.00",
+                        "quarterly": "-1.00",
+                        "semiannually": "-1.00",
+                        "annually": "40.00",
+                        "biennially": "76.00",
+                        "triennially": "-1.00"
+                    }
+                },
+                "customfields": {
+                    "customfield": []
+                },
+                "configoptions": {
+                    "configoption": [{}]
+                }
+            }
+        }
+    }
+```
+
+##### AddCreditApi
+
+Currently WHMCS API AddCredit [api-reference/addcredit](https://developers.whmcs.com/api-reference/addcredit/) allows to add credit to a given client.
+
+I needed an API request that allowed me to charge a client for credit and after successful payment credit be added automatically.
+
+Just upload to /includes/api .
+
+##### Request Parameters "AddCreditApi" 
+
+| Parameter | Type | Description | Required |
+| ------ | ------ | ------ | ------ |
+| action | string | “AddCreditApi” | Required |
+| userid | int | The userid of client to make credit request | required |
+| itemamount | float | The amount of credit to add or remove. Must be a positive value. | required |
+| paymentmethod | string | The payment method to charge with | required
+
+##### Response Parameters
+
+| Parameter | Type | Description 
+| ------ | ------ | ------ |
+| result | string | The result of the operation: success or error |
+| invoiceid | int | invoice Number | 
+| status | string | The status os the invoice |
+| paymentMethod | array | Returns the payment information |
+
+### Example Request (CURL)
+
+```php
+$command = 'AddCreditApi';
 $postData = array(
-    'pid' =&gt; '1', // or gid =&gt; '1' or both
+    'userid' => '1',
+    'itemamount' => '50',
+    'paymentmethod' => 'paypal',
 );
 $adminUsername = 'ADMIN_USERNAME'; // Optional for WHMCS 7.2 and later
 
 $results = localAPI($command, $postData, $adminUsername);
-print_r($results);</span></pre>
-&nbsp;
+print_r($results);
+```
 
-Have a better code or add something? Please do!
+### Example Request (Local API)
 
-You can download the code here: <a href="https://www.rosendo.pt/wp-content/uploads/2017/10/getproductsactive.zip">WHMCS API getproductsactive</a>
+```php
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://www.example.com/includes/api.php');
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+    http_build_query(
+        array(
+            'action' => 'AddCreditApi',
+            // See https://developers.whmcs.com/api/authentication
+            'username' => 'IDENTIFIER_OR_ADMIN_USERNAME',
+            'password' => 'SECRET_OR_HASHED_PASSWORD',
+            'userid' => '1',
+            'itemamount' => '50',
+            'paymentmethod' => 'paypal',
+            'responsetype' => 'json',
+        )
+    )
+);
+$response = curl_exec($ch);
+curl_close($ch);
+```
 
-Cheers,
+#### Example output:
+```json
+{
+    "result": "success",
+    "invoiceid": 129,
+    "status": "Unpaid",
+    "paymentMethod": {
+        "amount": "52",
+        "data": "Bank: XPTO Bank\r\n"
+    }
+}
+```
 
-David
+##### GetProductsGroups
+
+Currently WHMCS API has no method to retrieve your current product groups.
+
+I needed an API request that allowed me to retrive the products groups I have ACTIVE in WHMCS or just a specific one for some future porpuse.
+
+Just upload to /includes/api .
+
+##### Request Parameters "GetProductsGroups" 
+
+| Parameter | Type | Description | Required |
+| ------ | ------ | ------ | ------ |
+| action | string | “GetProductsGroups” | Required |
+| gid | int | The group id to get information of | optional |
+
+##### Response Parameters
+
+| Parameter | Type | Description 
+| ------ | ------ | ------ |
+| result | string | The result of the operation: success or error |
+| groups | array | Returns the groups information |
+
+### Example Request (CURL)
+
+```php
+$command = 'GetProductsGroups';
+$postData = array(
+    'gid' => '1', // optional data
+);
+$adminUsername = 'ADMIN_USERNAME'; // Optional for WHMCS 7.2 and later
+
+$results = localAPI($command, $postData, $adminUsername);
+print_r($results);
+```
+
+### Example Request (Local API)
+
+```php
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://www.example.com/includes/api.php');
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+    http_build_query(
+        array(
+            'action' => 'GetProductsGroups',
+            // See https://developers.whmcs.com/api/authentication
+            'username' => 'IDENTIFIER_OR_ADMIN_USERNAME',
+            'password' => 'SECRET_OR_HASHED_PASSWORD',
+            'gid' => '1', // Optional
+            'responsetype' => 'json',
+        )
+    )
+);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+
+#### Example output:
+```json
+{
+    "result": "success",
+    "groups": [
+        {
+            "id": "1",
+            "name": "Web Hosting - Linux"
+        }
+    ]
+}
+```
+
+##### PaymentData
+
+Currently WHMCS API GetInvoice [api-reference/getinvoice](https://developers.whmcs.com/api-reference/getinvoice/) retrieves a specific invoice.
+
+I needed a solution to retrieve the payment information from it
+
+Just upload to /includes/api .
+
+##### Request Parameters "PaymentData" 
+
+| Parameter | Type | Description | Required |
+| ------ | ------ | ------ | ------ |
+| action | string | “GetProductsActive” | Required |
+| invoiceid | int | The ID of the invoice to retrieve | Required |
+
+##### Response Parameters
+
+| Parameter | Type | Description 
+| ------ | ------ | ------ |
+| result | string | The result of the operation: success or error |
+| products | array | An array of invoice data and payment method | 
+
+### Example Request (CURL)
+
+```php
+$command = 'PaymentData';
+$postData = array(
+    'invoiceid' => '66', 
+);
+$adminUsername = 'ADMIN_USERNAME'; // Optional for WHMCS 7.2 and later
+
+$results = localAPI($command, $postData, $adminUsername);
+print_r($results);
+```
+
+### Example Request (Local API)
+
+```php
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://www.example.com/includes/api.php');
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS,
+    http_build_query(
+        array(
+            'action' => 'PaymentData',
+            // See https://developers.whmcs.com/api/authentication
+            'username' => 'IDENTIFIER_OR_ADMIN_USERNAME',
+            'password' => 'SECRET_OR_HASHED_PASSWORD',
+            'invoiceid' => '66',
+            'responsetype' => 'json',
+        )
+    )
+);
+$response = curl_exec($ch);
+curl_close($ch);
+```
+
+#### Example output:
+```json
+{
+    "result": "success",
+    "paymentdata": {
+        "order": {
+            "result": "success",
+            "invoiceid": "66",
+            "invoicenum": "",
+            "userid": "1",
+            "date": "2019-07-16",
+            "duedate": "2019-07-16",
+            "datepaid": "0000-00-00 00:00:00",
+            "lastcaptureattempt": "0000-00-00 00:00:00",
+            "subtotal": "11.99",
+            "credit": "0.00",
+            "tax": "2.76",
+            "tax2": "0.00",
+            "total": "14.75",
+            "balance": "14.75",
+            "taxrate": "23.00",
+            "taxrate2": "0.00",
+            "status": "Unpaid",
+            "paymentmethod": "banktransfer",
+            "notes": "",
+            "ccgateway": false,
+            "items": {
+                "item": [
+                    {
+                        "id": "121",
+                        "type": "DomainRegister",
+                        "relid": "37",
+                        "description": "Register Domain - samplesthis.com - 1 year) (16/07/2019 - 15/07/2020)\n",
+                        "amount": "14.75",
+                        "taxed": "1"
+                    }
+                ]
+            },
+            "transactions": ""
+        },
+        "amount": "14.75",
+        "data": "Bank XPTO"
+    }
+}
+```
+
+### Todos
+
+ - Share MORE API's
+ - Wait for feedback and other developers shares
+
+License
+----
+
+MIT
+
+
+**Free Software, Hell Yeah!**
