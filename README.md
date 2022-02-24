@@ -12,6 +12,10 @@ This project consists of sharing custom API solutions:
   - GetProductsGroups
   - PaymentData
 
+### Register API's in WHMCS system to be used in Role Management
+
+Add the following hook file in /includes/hooks/ directory. Make your changes to fit your group needs.
+
 ##### GetProductsActive
 
 Currently WHMCS API GetProducts [api-reference/getproducts](https://developers.whmcs.com/api-reference/getproducts/) retrieves all products and no information regarding if the product is active or not.
