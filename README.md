@@ -38,7 +38,7 @@ Just upload to /includes/api .
 | numreturned | int | The number of results returned |
 | products | array | An array of products matching the criteria passed | 
 
-### Example Request (CURL)
+### Example Request (Local API)
 
 ```php
 $command = 'GetProductsActive';
@@ -51,7 +51,7 @@ $results = localAPI($command, $postData, $adminUsername);
 print_r($results);
 ```
 
-### Example Request (Local API)
+### Example Request (CURL)
 
 ```php
 $ch = curl_init();
@@ -143,7 +143,7 @@ Just upload to /includes/api .
 | status | string | The status os the invoice |
 | paymentMethod | array | Returns the payment information |
 
-### Example Request (CURL)
+### Example Request (Local API)
 
 ```php
 $command = 'AddCreditApi';
@@ -158,7 +158,7 @@ $results = localAPI($command, $postData, $adminUsername);
 print_r($results);
 ```
 
-### Example Request (Local API)
+### Example Request (CURL)
 
 ```php
 $ch = curl_init();
@@ -217,7 +217,7 @@ Just upload to /includes/api .
 | result | string | The result of the operation: success or error |
 | groups | array | Returns the groups information |
 
-### Example Request (CURL)
+### Example Request (Local API)
 
 ```php
 $command = 'GetProductsGroups';
@@ -230,7 +230,7 @@ $results = localAPI($command, $postData, $adminUsername);
 print_r($results);
 ```
 
-### Example Request (Local API)
+### Example Request (CURL)
 
 ```php
 $ch = curl_init();
@@ -287,7 +287,7 @@ Just upload to /includes/api .
 | result | string | The result of the operation: success or error |
 | products | array | An array of invoice data and payment method | 
 
-### Example Request (CURL)
+### Example Request (Local API)
 
 ```php
 $command = 'PaymentData';
@@ -300,7 +300,7 @@ $results = localAPI($command, $postData, $adminUsername);
 print_r($results);
 ```
 
-### Example Request (Local API)
+### Example Request (CURL)
 
 ```php
 $ch = curl_init();
