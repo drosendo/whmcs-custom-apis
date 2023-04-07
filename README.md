@@ -11,6 +11,7 @@ This project consists of sharing custom API solutions:
   - AddCreditApi
   - GetProductsGroups
   - PaymentData
+  - AddPromoCode
 
 ### Register API's in WHMCS system to be used in Role Management
 
@@ -369,6 +370,64 @@ curl_close($ch);
         "amount": "14.75",
         "data": "Bank XPTO"
     }
+}
+```
+
+##### Request Parameters "addPromoCode"
+
+| Parameter      | Type   | Description                                               | Required |
+| -------------- | ------ | --------------------------------------------------------- | -------- |
+| action         | string | Either "create" (to create a new promotion) or "update" (to update an existing promotion) | Required |
+| code           | string | The promotion code                                        | Required |
+| type           | string | The discount type, either 'percentage' or 'fixed'        | Required |
+| value          | float  | The discount value                                        | Required |
+| cycles         | string | The billing cycles to which the promo code applies (e.g., 'Monthly') | Optional |
+| appliesto      | string | A comma-separated list of product IDs the promotion applies to | Optional |
+| expirationdate | string | The promotion code expiration date in the format 'YYYY-MM-DD' | Optional |
+| maxuses        | int    | The maximum number of times the promo code can be used   | Optional |
+| promotionid    | int    | The ID of the promotion to update (only required for 'update' action) | Conditional |
+
+##### Response Parameters
+
+| Parameter  | Type   | Description                             |
+| ---------- | ------ | --------------------------------------- |
+| result     | string | The result of the operation: success or error |
+| message    | string | A message describing the result of the API call |
+| promotionid | int    | The ID of the created or updated promotion |
+
+### Example Request (Local API)
+
+```php
+$command = 'addPromoCode';
+$postData = array(
+    'action' => 'create',
+    'code' => 'PROMO10',
+    'type' => 'percentage',
+    'value' => '10',
+    'cycles' => 'Monthly',
+    'appliesto' => '1,2,3',
+    'expirationdate' => '2023-12-31',
+    'maxuses' => '50',
+);
+$adminUsername = 'ADMIN_USERNAME'; // Optional for WHMCS 7.2 and later
+
+$results = localAPI($command, $postData, $adminUsername);
+print_r($results);
+```
+
+#### Example JSON Output for 'create' action:
+
+```json
+{
+  "result": "success",
+  "message": "Promotion code created successfully",
+  "promotionid": 1234
+}
+
+{
+  "result": "success",
+  "message": "Promotion code updated successfully",
+  "promotionid": 1234
 }
 ```
 
